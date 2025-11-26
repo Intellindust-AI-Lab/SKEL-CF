@@ -1,0 +1,109 @@
+body_models:
+  skel_mix_hsmr:
+    model_path: '${paths.data_inputs}/body_models/skel'
+    gender: male  # Use male since we don't have neutral model.
+    joint_regressor_extra: '${paths.data_inputs}body_models/train-eval-utils/SMPL_to_J19.pkl'
+    joint_regressor_custom: '${paths.data_inputs}/body_models/J_regressor_SKEL_mix_MALE.pkl'
+
+  skel_hsmr:
+    model_path: '${paths.data_inputs}/body_models/skel'
+    gender: male  # Use male since we don't have neutral model.
+    joint_regressor_extra: '${paths.data_inputs}/body_models/SMPL_to_J19.pkl'
+    # joint_regressor_custom: '${_pm_.inputs}/body_models/J_regressor_SMPL_MALE.pkl'
+
+  smpl_hsmr:
+    model_path: '${paths.data_inputs}/body_models/smpl'
+    gender: male  # align with skel_hsmr
+    num_body_joints: 23
+    joint_regressor_extra: '${paths.data_inputs}/body_models/SMPL_to_J19.pkl'
+
+  smpl_hsmr_neutral:
+    model_path: '${paths.data_inputs}/body_models/smpl'
+    gender: neutral  # align with skel_hsmr
+    num_body_joints: 23
+    joint_regressor_extra: '${paths.data_inputs}/body_models/SMPL_to_J19.pkl'
+
+backbones:
+
+  vit_b:
+    img_size: [256, 192]
+    patch_size: 16
+    embed_dim: 768
+    depth: 12
+    num_heads: 12
+    ratio: 1
+    use_checkpoint: False
+    mlp_ratio: 4
+    qkv_bias: True
+    drop_path_rate: 0.3
+
+  vit_h:
+    img_size: [256, 192]
+    patch_size: 16
+    embed_dim: 1280
+    depth: 32
+    num_heads: 16
+    ratio: 1
+    use_checkpoint: False
+    mlp_ratio: 4
+    qkv_bias: True
+    drop_path_rate: 0.55
+
+    
+skel_head:
+    pd_poses_repr: 'rotation_6d'
+    transformer_decoder:
+      depth: 6
+      heads: 8
+      mlp_dim: 1024
+      dim_head: 64
+      dropout: 0.0
+      emb_dropout: 0.0
+      norm: 'layer'
+      context_dim: 1280 # vitpose-h 1280 && dinov2 - 1024
+
+eval:
+  h36m_val_p2: 
+    dataset_file: ${paths.data_inputs}/hmr2_evaluation_data/h36m_val_p2.npz
+    img_root: ${paths.data_inputs}/datasets/h36m/images
+    kp_list:
+    - 25
+    - 26
+    - 27
+    - 28
+    - 29
+    - 30
+    - 31
+    - 32
+    - 33
+    - 34
+    - 35
+    - 36
+    - 37
+    - 43
+    use_hips: true
+  3dpw_test:
+    dataset_file: ${paths.data_inputs}/hmr2_evaluation_data/3dpw_test.npz
+    img_root: ${paths.data_inputs}/datasets/3dpw
+    kp_list:
+    - 25
+    - 26
+    - 27
+    - 28
+    - 29
+    - 30
+    - 31
+    - 32
+    - 33
+    - 34
+    - 35
+    - 36
+    - 37
+    - 43
+    use_hips: false
+    
+  coco_val:
+    dataset_file: ${paths.data_inputs}/hmr2_evaluation_data/coco_val.npz
+    img_root: ${paths.data_inputs}/datasets/coco
+    kp_list:
+    - 0

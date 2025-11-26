@@ -1,0 +1,65 @@
+# @package _global_
+# insta-1_insta-2_mpii-train_coco-train_aic_h36m-train_insta-1_insta-2_mpi-inf-train-h36m-train_mpi-inf-train
+DATASETS:
+  DATASETS_AND_RATIOS: 
+    # _insta-1_insta-2_mpii-train_coco-train_h36m-train_mpi-inf-train
+    - 'aic'
+    - 'insta-1'
+    - 'insta-2'
+    - 'mpii-train'
+    - 'coco-train'
+    - 'h36m-train'
+    - 'mpi-inf-train'
+    # - 'agora-train'
+    # # 2022 1010 - 2
+    # - '20221010_3_1000_batch01hand_6fps'
+    # - '20221010_3-10_500_batch01hand_zoom_suburb_d_6fps'
+    # # 2022 1011 - 4
+    # - '20221011_1_250_batch01hand_closeup_suburb_a_6fps'
+    # - '20221011_1_250_batch01hand_closeup_suburb_b_6fps'
+    # - '20221011_1_250_batch01hand_closeup_suburb_c_6fps'
+    # - '20221011_1_250_batch01hand_closeup_suburb_d_6fps'
+    # # 2022 1012 - 2
+    # - '20221012_1_500_batch01hand_closeup_highSchoolGym_6fps'
+    # - '20221012_3-10_500_batch01hand_zoom_highSchoolGym_6fps'
+    # # 2022 1013 - 3
+    # - '20221013_3_250_batch01hand_orbit_bigOffice_6fps'
+    # - '20221013_3_250_batch01hand_static_bigOffice_6fps'
+    # - '20221013_3-10_500_batch01hand_static_highSchoolGym_6fps'
+    # # 2022 1014 - 1
+    # - '20221014_3_250_batch01hand_orbit_archVizUI3_time15_6fps'
+    # # 2022 1015 - 3
+    # - '20221015_3_250_batch01hand_orbit_archVizUI3_time10_6fps'
+    # - '20221015_3_250_batch01hand_orbit_archVizUI3_time12_6fps'
+    # - '20221015_3_250_batch01hand_orbit_archVizUI3_time19_6fps'
+    # # 2022 1017 - 1
+    # - '20221017_3_1000_batch01hand_6fps'
+    # # 2022 1018 - 5 - 3 = 2
+    # # - '20221018_1_250_batch01hand_zoom_suburb_b_6fps'
+    # # - '20221018_3_250_batch01hand_orbit_archVizUI3_time15_6fps'
+    # # - '20221018_3-8_250_batch01hand_6fps'
+    # - '20221018_3-8_250_batch01hand_pitchDown52_stadium_6fps'
+    # - '20221018_3-8_250_batch01hand_pitchUp52_stadium_6fps'
+    # # 2022 1019 - 4
+    # - '20221019_1_250_highbmihand_closeup_suburb_b_6fps'
+    # - '20221019_1_250_highbmihand_closeup_suburb_c_6fps'
+    # - '20221019_3_250_highbmihand_6fps'
+    # - '20221019_3-8_1000_highbmihand_static_suburb_d_6fps'
+    # # 2022 1020 - 1
+    # - '20221020-3-8_250_highbmihand_zoom_highSchoolGym_a_6fps'
+    # # 2022 1022 - 1
+    # - '20221022_3_250_batch01handhair_static_bigOffice_30fps'
+    # # 2022 1024 - 2
+    # - '20221024_10_100_batch01handhair_zoom_suburb_d_30fps'
+    # - '20221024_3-10_100_batch01handhair_static_highSchoolGym_30fps'
+  VAL_DATASETS: emdb-smpl
+
+
+
+data_configs:
+  eval:
+      datasets:
+      - name: H36M-VAL-P2
+        item: ${hub.eval.h36m_val_p2}
+      - name: COCO-VAL
+        item: ${hub.eval.coco_val}

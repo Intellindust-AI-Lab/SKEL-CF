@@ -1,0 +1,50 @@
+# @package _global_
+
+# specify here default configuration
+# order of defaults determines the order in which configs override each other
+defaults:
+  - hub: models.yaml
+  - data: train.yaml
+  - paths: default.yaml
+  - hydra: default.yaml
+  - exp: skelvit.yaml
+  - _self_
+
+seed: 42
+exp_name: ""
+output_dir: ${paths.root_dir}/data_outputs/exp/${exp_name}
+
+misc:
+  aux_loss_weight_normal: 1.0
+
+logger:
+  samples_per_record: 5
+  logger_interval: 500
+
+policy:
+  img_patch_size: 256
+  focal_length: 5000
+  img_mean: [0.485, 0.456, 0.406]
+  img_std: [0.229, 0.224, 0.225]
+  bbox_shape: null
+  
+trainer:
+  total_epochs: 20
+  max_lr: 1e-5
+  min_lr: 1e-7
+  warmup_epochs: 1
+  batch_size: 128
+  test_batch_size: 128
+  weight_decay: 1e-4
+  ema_tau: 8000
+  ema_decaybase: 0.9995
+  moyo_name: moyo_hard
+  lamda: 1.0
+
+eval_list:
+  datasets: COCO-VAL
+
+
+
+
+

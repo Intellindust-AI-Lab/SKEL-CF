@@ -1,0 +1,15 @@
+# @package _global_
+
+defaults:
+  - default.yaml
+
+general:
+  num_workers: 6
+  PREFETCH_FACTOR: 2 
+
+loss_weights:
+  kp3d: 0.05
+  kp2d: 0.05
+  poses_orient: 0.002
+  poses_body: 0.001
+  betas: 0.0005

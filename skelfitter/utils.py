@@ -1,0 +1,127 @@
+import os
+import pickle
+import numpy as np
+import torch
+
+from util.pylogger import get_pylogger
+
+logger = get_pylogger(__name__)
+
+def to_torch(x, device):
+    return torch.from_numpy(x).float().to(device)
+
+def to_params(x, device):
+    return x.to(device).requires_grad_(True)
+
+
+def load_smpl_seq(smpl_seq_path, gender=None, straighten_hands=False):
+
+    if not os.path.exists(smpl_seq_path):
+        raise Exception('Path does not exist: {}'.format(smpl_seq_path))
+    
+    if smpl_seq_path.endswith('.pkl'):
+        data_dict = pickle.load(open(smpl_seq_path, 'rb'))
+    elif smpl_seq_path.endswith('.npz'):
+        data_dict = np.load(smpl_seq_path, allow_pickle=True)
+
+        if data_dict.files == ['pred_smpl_parms', 'verts', 'pred_cam_t']:
+            data_dict = data_dict['pred_smpl_parms'].item()# ['global_orient', 'body_pose', 'body_pose_axis_angle', 'global_orient_axis_angle', 'betas']
+        else:
+            data_dict = {key: data_dict[key] for key in data_dict.keys()} # convert to python dict
+    else:
+        raise Exception('Unknown file format: {}. Supported formats are .pkl and .npz'.format(smpl_seq_path))
+
+    # Instanciate a dictionary with the keys expected by the fitter
+    data_fixed = {}  
+
+    # Get gender     
+    # if 'gender' not in data_dict:
+    #     assert gender is not None, f"The provided SMPL data dictionary does not contain gender, you need to pass it in command line"
+    #     data_fixed['gender'] = gender
+    # elif not isinstance(data_dict['gender'], str):
+    #     # In some npz, the gender type happens to be: array('male', dtype='<U4'). So we convert it to string
+    #     data_fixed['gender'] = str(data_dict['gender'])
+    # else:
+    
+    # only allowed default gender, we set it to male
+    data_fixed['gender'] = gender
+
+    # convert tensors to numpy arrays
+    for key, val in data_dict.items():
+        if isinstance(val, torch.Tensor):
+            data_dict[key] = val.detach().cpu().numpy()
+    
+    # Get the SMPL pose
+    if 'poses' in data_dict: 
+        poses = data_dict['poses']
+    elif 'body_pose_axis_angle' in data_dict and 'global_orient_axis_angle' in data_dict:
+        # assert 'global_orient' in data_dict and 'body_pose' in data_dict, f"Could not find poses in {smpl_seq_path}. Available keys: {data_dict.keys()})"
+        poses = np.concatenate([data_dict['global_orient_axis_angle'], data_dict['body_pose_axis_angle']], axis=1)
+        poses = poses.reshape(-1, 72)
+    elif 'pose_cam' in data_dict:
+        poses = data_dict['pose_cam']
+        poses = poses.reshape(-1, 72)
+        logger.info(f"poses_cam shape: {poses.shape}")
+    elif 'body_pose' in data_dict and 'global_orient' in data_dict and 'body_pose_axis_angle' in data_dict and 'global_orient_axis_angle' in data_dict:
+        poses = np.concatenate([data_dict['global_orient_axis_angle'], data_dict['body_pose_axis_angle']], axis=-1)
+    elif 'body_pose' in data_dict and 'global_orient' in data_dict:
+        poses = np.concatenate([data_dict['global_orient'], data_dict['body_pose']], axis=-1)
+    else: 
+        raise Exception(f"Could not find poses in {smpl_seq_path}. Available keys: {data_dict.keys()})")
+    
+    if poses.shape[1] == 156:
+        # Those are SMPL+H poses, we remove the hand poses to keep only the body poses
+        smpl_poses = np.zeros((poses.shape[0], 72))
+        smpl_poses[:, :72-2*3] = poses[:, :72-2*3] # We leave params for SMPL joints 22 and 23 to zero as these DOF are not present in SMPLH
+        poses = smpl_poses
+    
+    # Set SMPL joints 22 and 23 to zero as SKEL has rigid hands 
+    if straighten_hands:      
+        poses[:, 72-2*3:] = 0
+
+    data_fixed['poses'] = poses
+
+    # Translation
+    if 'trans' in data_dict:
+        data_fixed['trans'] = data_dict['trans']
+    elif 'transl' in data_dict:
+        data_fixed['trans'] = data_dict['transl']
+    elif 'trans_cam' in data_dict:
+        data_fixed['trans'] = data_dict['trans_cam']
+    else:
+        print(f'WARNING: Could not find translation in {smpl_seq_path}. Setting translation to zeros.')
+        data_fixed['trans'] = np.zeros((poses.shape[0], 3))
+    
+    # Get betas
+    if 'betas' in data_dict:
+        betas = data_dict['betas'][..., :10] # Keep only the 10 first betas
+    elif 'shape' in data_dict:
+        betas = data_dict['shape'][..., :10]
+    else:
+        raise Exception('Not Found betas in {}. Available keys: {}'.format(smpl_seq_path, data_dict.keys()))
+    
+    if len(betas.shape) == 1 and len(poses.shape) == 2:
+        betas = betas[None, :] # Add a batch dimension
+    data_fixed['betas'] = betas
+
+    for key in ['trans', 'poses', 'betas', 'gender']:
+        assert key in data_fixed.keys(), f'Could not find {key} in {smpl_seq_path}. Available keys: {data_fixed.keys()})'
+
+    out_dict = {}
+    out_dict['trans'] = data_fixed['trans']
+    out_dict['poses'] = data_fixed['poses']
+    out_dict['betas'] = data_fixed['betas']
+    out_dict['gender'] = data_fixed['gender']
+
+    for k, v in data_dict.items():
+        if k not in out_dict:
+            out_dict[k] = v
+    
+    # Check the shape of the parameters
+    num_batches = out_dict['poses'].shape[0]
+    assert out_dict['trans'].shape[0] == num_batches, f"Number of translations ({out_dict['trans'].shape[0]}) does not match the number of poses ({num_batches})"
+    assert out_dict['poses'].shape[1] == 72, f"Poses should have 72 parameters, found {out_dict['poses'].shape[1]} parameters"
+    assert out_dict['betas'].shape[1] == 10, f"Betas should have 10 parameters, found {out_dict['betas'].shape[1]} parameters"
+    assert out_dict['gender'] in ['male', 'female'], f"Gender should be either 'male' or 'female', found {out_dict['gender']}"
+
+    return out_dict    

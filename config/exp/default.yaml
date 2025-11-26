@@ -1,0 +1,21 @@
+# @package _global_
+
+EXTRA:
+  PELVIS_IND: 39
+
+datasets:
+  betas_reg: True
+  config:
+    scale_factor: 0.1
+    rot_factor: 0
+    trans_factor: 0.0
+    color_scale: 0.2
+    rot_aug_rate: 0.0
+    trans_aug_rate: 0.0
+    do_flip: False
+    flip_aug_rate: 0.0
+    extreme_crop_aug_rate: 0.10
+    extreme_crop_aug_level: 1
+    use_alb: True
+    alb_prob: 0.3
+    verts2d: 0

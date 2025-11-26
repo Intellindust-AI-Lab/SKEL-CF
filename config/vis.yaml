@@ -1,0 +1,48 @@
+# @package _global_
+
+# specify here default configuration
+# order of defaults determines the order in which configs override each other
+defaults:
+  - hub: models.yaml
+  - data: eval_dataset.yaml
+  - paths: default.yaml
+  - hydra: default.yaml
+  - exp: skelvit.yaml
+  - _self_
+
+seed: 42
+# task name, determines output directory path
+exp_name: "eval"
+output_dir: ${paths.root_dir}/data_outputs/exp/${exp_name}
+
+logger:
+  samples_per_record: 5
+  logger_interval: 500
+
+policy:
+  img_patch_size: 256
+  focal_length: 5000
+  img_mean: [0.485, 0.456, 0.406]
+  img_std: [0.229, 0.224, 0.225]
+  bbox_shape: null
+
+
+misc:
+  distill_type: false
+
+  
+trainer:
+  total_epochs: 20
+  max_lr: 1e-5
+  min_lr: 1e-7
+  warmup_epochs: 1
+  test_batch_size: 128
+  weight_decay: 1e-4
+  ckpt_path: null
+  moyo_name: moyo_hard
+
+
+
+
+
+
