@@ -17,8 +17,8 @@ To test images “in the wild,” you need to install the appropriate version of
 # Data-preparation
 
 Choose your setup path:
-- [Quick Start](#quick-start): Run the demo in minutes with pre-configured settings
-- [Advanced Setup](#advanced-setup): Deep dive into the method details and custom configurations
+- [Quick Start](#--quick-start): Run the demo in minutes with pre-configured settings
+- [Advanced Setup](#--advanced-setup): Deep dive into the method details and custom configurations
 
 <!-- We have uploaded our various datasets to the OneDrive. You can download the required resources from [this link](https://1drv.ms/f/c/89cf0bfd859af8e2/IgCPQSPYHWA1T495bGcBbJCqAVPl4MX0-1-_8G4LdbYRxSA?e=8JHYI7). -->
 ## 🚀 Quick start
@@ -52,8 +52,7 @@ Once downloaded, organize the files according to the directory structure below:
         ├── J_regressor_h36m.pkl
         ├── SMPL_TO_J19.pkl
         ├── J_regressor_SKEL_mix_MALE.pkl
-        ├── J_regressor_SMPL_MALE.pkl
-        ├── smpl_mean_params.npz
+        └── J_regressor_SMPL_MALE.pkl
 
 ### SKEL-CF Checkpoint
 Download **best.pth** from [SKEL-CF](https://onedrive.live.com/?redeem=aHR0cHM6Ly8xZHJ2Lm1zL2YvYy84OWNmMGJmZDg1OWFmOGUyL0lnQ1BRU1BZSFdBMVQ0OTViR2NCYkpDcUFWUGw0TVgwLTEtXzhHNExkYllSeFNBP2U9OEpIWUk3&id=89CF0BFD859AF8E2%21sd823418f601d4f358f796c67016c90aa&cid=89CF0BFD859AF8E2) and place it at data_outputs/exp/ (or wherever you like, but rember to adjust the path in eval.sh and rendering bash shells)
