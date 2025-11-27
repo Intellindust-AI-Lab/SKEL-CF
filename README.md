@@ -72,7 +72,7 @@
 
 ##  🗓️ Updates
 - [x] **\[2025.11.26\]** Release SKEL-CF.
-- [x] **\[2025.11.27\]** Upload the model checkpoints & labels to hugging face
+- [x] **\[2025.11.27\]** Release checkpoints and labels on Hugging Face.
 
 ## 🧭 Table of Content
 * [1. ⚒️ Setup](#%EF%B8%8F-setup)

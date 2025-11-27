@@ -17,8 +17,8 @@ To test images “in the wild,” you need to install the appropriate version of
 # Data-preparation
 
 Choose your setup path:
-- [Quick Start](#--quick-start): Run the demo in minutes with pre-configured settings
-- [Advanced Setup](#--advanced-setup): Deep dive into the method details and custom configurations
+- [Quick Start](#-quick-start): Run the demo in minutes with pre-configured settings
+- [Advanced Setup](#-advanced-setup): Deep dive into the method details and custom configurations
 
 <!-- We have uploaded our various datasets to the OneDrive. You can download the required resources from [this link](https://1drv.ms/f/c/89cf0bfd859af8e2/IgCPQSPYHWA1T495bGcBbJCqAVPl4MX0-1-_8G4LdbYRxSA?e=8JHYI7). -->
 ## 🚀 Quick start
