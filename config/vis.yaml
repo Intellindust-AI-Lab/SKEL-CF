@@ -32,14 +32,13 @@ misc:
 
   
 trainer:
-  total_epochs: 20
+  total_epochs: 30
   max_lr: 1e-5
   min_lr: 1e-7
   warmup_epochs: 1
   test_batch_size: 128
   weight_decay: 1e-4
   ckpt_path: null
-  moyo_name: moyo_hard
 
 
 

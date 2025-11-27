@@ -2,12 +2,8 @@
 
 DATASETS:
   DATASETS_AND_RATIOS: 'insta-1_insta-2_mpii-train_coco-train_aic_h36m-train_mpi-inf-train'
-  VAL_DATASETS: spec-test-smpl_3dpw-cameraHMR-smpl_emdb-smpl
-  # spec-test-smpl_3dpw-cameraHMR-smpl_emdb-smpl
+  VAL_DATASETS: spec-test-smpl_3dpw-smpl_emdb-smpl
   EXTRA_DATASETS: moyo
-  # moyo-smpl
-  # _3dpw-test-cam-smpl_emdb-smpl_spec-test-smpl_moyo-smpl_coco-val-smpl
-  # _rich-smplx_coco-val-smpl--coco-val-smpl_emdb-smpl_3dpw-test-cam-smpl_moyo-smpl-
 
 data_configs:
   eval:

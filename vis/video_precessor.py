@@ -42,6 +42,7 @@ class VideoPrecessor:
         print(f"video info: {video_meta['L']} frames, {video_meta['w']}x{video_meta['h']}, {video_meta['fps']} FPS")
         
         total_frames = len(frames)
+        start_frame = start_frame if start_frame is not None else 0
         end_frame = end_frame if end_frame is not None else total_frames
         end_frame = min(end_frame, total_frames)
 

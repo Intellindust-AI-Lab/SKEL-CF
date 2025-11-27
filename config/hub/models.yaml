@@ -2,7 +2,7 @@ body_models:
   skel_mix_hsmr:
     model_path: '${paths.data_inputs}/body_models/skel'
     gender: male  # Use male since we don't have neutral model.
-    joint_regressor_extra: '${paths.data_inputs}body_models/train-eval-utils/SMPL_to_J19.pkl'
+    joint_regressor_extra: '${paths.data_inputs}/body_models/SMPL_to_J19.pkl'
     joint_regressor_custom: '${paths.data_inputs}/body_models/J_regressor_SKEL_mix_MALE.pkl'
 
   skel_hsmr:
@@ -64,8 +64,8 @@ skel_head:
 
 eval:
   h36m_val_p2: 
-    dataset_file: ${paths.data_inputs}/hmr2_evaluation_data/h36m_val_p2.npz
-    img_root: ${paths.data_inputs}/datasets/h36m/images
+    dataset_file: ${paths.data_inputs}/skel-evaluation-labels/h36m_val_p2.npz
+    img_root: ${paths.data_inputs}/skel-evaluation-data/h36m-select
     kp_list:
     - 25
     - 26
@@ -82,28 +82,9 @@ eval:
     - 37
     - 43
     use_hips: true
-  3dpw_test:
-    dataset_file: ${paths.data_inputs}/hmr2_evaluation_data/3dpw_test.npz
-    img_root: ${paths.data_inputs}/datasets/3dpw
-    kp_list:
-    - 25
-    - 26
-    - 27
-    - 28
-    - 29
-    - 30
-    - 31
-    - 32
-    - 33
-    - 34
-    - 35
-    - 36
-    - 37
-    - 43
-    use_hips: false
-    
+
   coco_val:
-    dataset_file: ${paths.data_inputs}/hmr2_evaluation_data/coco_val.npz
-    img_root: ${paths.data_inputs}/datasets/coco
+    dataset_file: ${paths.data_inputs}/skel-evaluation-labels/coco_val.npz
+    img_root: ${paths.data_inputs}/skel-evaluation-data/coco
     kp_list:
     - 0

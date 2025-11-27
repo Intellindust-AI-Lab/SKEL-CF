@@ -52,7 +52,6 @@ def fix_prefix_state_dict(st: Dict):
 
 
 def eval_pipeline(model, data_list):
-    d3_metric_result = None
     for data in data_list:
         evaluator = UniformEvaluator(data, 'cuda')
 
@@ -73,13 +72,8 @@ def eval_pipeline(model, data_list):
             
         ds_name = data['name']
         results = evaluator.get_results()
-        
-        if ds_name == 'H36M-VAL-P2' or ds_name == '3DPW-TEST':
-            d3_metric_result = results
-
         logger.info(f'{ds_name}:\n{results}')
 
-    return d3_metric_result
 
 
 
@@ -91,9 +85,10 @@ def main(cfg):
     data_list = []
     ds_list = ds_conf.split('_')
     for ds_name in ds_list:
-        logger.info(f'Will test on {ds_name}')
         data = get_data(ds_name, cfg)
         data_list.append(data)
+
+        logger.info(f'Will test on {ds_name}')
 
     # 2. Prepare the pipeline.
     ckpt_paths = cfg.trainer.ckpt_path
@@ -102,9 +97,8 @@ def main(cfg):
     st = torch.load(ckpt_paths, map_location='cpu', weights_only=False)['ema_model']
     st = fix_prefix_state_dict(st)
     missing, unexpected = model.load_state_dict(st, strict=False)
-    logger.info("Missing:", missing)
-    logger.info("Unexpected:", unexpected)
-
+    logger.info("Missing: " + str(missing))
+    logger.info("Unexpected: " + str(unexpected))
     model = model.to('cuda')
     model.eval()
 

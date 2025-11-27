@@ -78,10 +78,6 @@ class HmrDataset(torch.utils.data.Dataset):
             self.betas = np.zeros((len(self.imgname), 10), dtype=np.float32)
             self.has_betas = np.zeros(len(self.imgname), dtype=np.float32)
 
-        # try:
-        #     self.trans = self.data['trans'].astype(np.float32)
-        # except KeyError:
-        #     self.trans = np.zeros((len(self.imgname), 3), dtype=np.float32)
 
         # Try to get 2d keypoints, if available
         try:

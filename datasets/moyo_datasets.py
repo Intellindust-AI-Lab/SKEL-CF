@@ -186,16 +186,11 @@ class EvalMoyoDataset(data.Dataset):
         self.ignore_img = ignore_img   
         self.normalize_img = Normalize(mean=cfg.policy.img_mean,
                                 std=cfg.policy.img_std)
-        logger.info(f'evalute {npz_fn}')
+        self.ds_name = 'moyo_hard' if 'moyo_hard' in str(npz_fn) else 'moyo_v2'
 
     def _load_data(self, npz_fn: Union[str, Path]):
-        supported_datasets = ['MoYo']
         raw_data = np.load(npz_fn, allow_pickle=True)
 
-        # Load some meta data.
-        # self.extra_info = raw_data['extra_info'].item()
-        # self.ds_name = self.extra_info.pop('dataset_name')
-        self.ds_name = 'MoYo'
         # Load basic information 
         self.seq_names = raw_data['names'] # (L, )
         self.img_paths = raw_data['img_paths'] # (L, )
@@ -208,8 +203,7 @@ class EvalMoyoDataset(data.Dataset):
         self.body_pose     = raw_data['smpl'].item()['body_pose'].reshape(-1, 23 ,3).astype(np.float32)  # (L, 23, 3)
         self.betas         = raw_data['smpl'].item()['betas'].reshape(-1, 10).astype(np.float32)  # (L, 10)
 
-        # Check validity.
-        assert self.ds_name in supported_datasets, f'Unsupported dataset: {self.ds_name}'
+        logger.info(f'Loaded {self.L} samples from {npz_fn}')
     
     def __len__(self):
         return self.L
@@ -264,7 +258,7 @@ class EvalMoyoDataset(data.Dataset):
             ret['gender'] = self.genders[idx]
         # ret['img'], ret['cv_img'] = self._process_img_patch(idx)
         ret['img'], _, ret['img_size'], ret['img_full_resized'] = self._process_img_patch(idx)
-        ret['ds_name'] = 'moyo'
+        ret['ds_name'] = self.ds_name
         ret['box_center'] = self.bbox_centers[idx]
         ret['bbox_size'] = self.bbox_scales[idx].max()
         return ret 

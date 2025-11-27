@@ -286,13 +286,18 @@ def test(cfg):
     val_dataset_list = build_dataset(cfg, 'val')
     root_dir = Path(cfg.paths.data_inputs)
     if 'moyo' in cfg.DATASETS.EXTRA_DATASETS:
-        moyo_name = cfg.trainer.moyo_name
-        moyo_name = moyo_name + '.npz' 
-        moyo_name = Path(moyo_name)
-        npz_file = root_dir / 'skel-evaluation-labels' / moyo_name 
+        # Load MOYO-HARD dataset
+        npz_file = root_dir / 'skel-evaluation-labels' / 'moyo_hard.npz'
+        moyo_hard_dataset = EvalMoyoDataset(cfg, npz_fn=npz_file, ignore_img=False)
+        val_dataset_list.append(moyo_hard_dataset)
+        
+        # Load MOYO-all dataset
+        npz_file = root_dir / 'skel-evaluation-labels' / 'moyo_v2.npz'
         moyo_dataset = EvalMoyoDataset(cfg, npz_fn=npz_file, ignore_img=False)
         val_dataset_list.append(moyo_dataset)
-        logger.info('MOYO will be tested')
+
+        logger.info(f'Loaded MOYO & MOYO-HARD datasets')
+
 
     device = torch.device('cuda')
    
@@ -311,7 +316,7 @@ def test(cfg):
     skel_model = SKELWrapper(
         gender = 'male',
         model_path = data_inputs / 'body_models' / 'skel',
-        joint_regressor_extra = data_inputs / 'body_models' / 'train-eval-utils' / 'SMPL_to_J19.pkl',
+        joint_regressor_extra = data_inputs / 'body_models'  / 'SMPL_to_J19.pkl',
         joint_regressor_custom = data_inputs / 'body_models' / 'J_regressor_SMPL_MALE.pkl',
     ).to(device)
 
@@ -340,7 +345,7 @@ def test(cfg):
 
             if 'emdb' in ds_name[0]:
                 evaluate_emdb(batch, total_predict, evaluator, device)
-            elif 'moyo' in ds_name[0]:
+            elif 'moyo' in ds_name[0] or 'moyo_hard' in ds_name[0]:
                 evaluate_moyo(skel_model, smpl_model, batch, total_predict, evaluator, device)
             elif '3dpw' in ds_name[0]:
                 evaluate_3dpw(batch, total_predict, evaluator, device)

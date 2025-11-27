@@ -12,6 +12,7 @@ from body_models.skel_utils.transforms import params_q2rep
 from body_models.skel_wrapper import SKELWrapper
 from datasets.constants import SMPL_MODEL_DIR
 from run_hsmr_test import eval_pipeline, get_data
+from util.geometry import rotation_6d_to_matrix
 import util.misc as utils
 from util.pylogger import get_pylogger
 from smplx import SMPL
@@ -37,17 +38,19 @@ def to_device(obj, device):
         return obj
 
 
-def compute_aux_loss_normal(per_layer_params, targets):
+def compute_aux_loss(per_layer_params, targets):
 
     assert per_layer_params is not None and targets is not None, "per_layer_params and targets are required"
     B = targets['poses'].shape[0]
     loss = 0.
     
     gt_poses = params_q2rep(targets['poses']).reshape(-1, 24, 6)
+    gt_rotmat = rotation_6d_to_matrix(gt_poses)
+
     for i, layer_params in enumerate(per_layer_params):
         pd_poses_i = layer_params[f'pd_poses_{i}'].reshape(-1, 24, 6)
-
-        loss += F.l1_loss(pd_poses_i, gt_poses, reduction='mean')
+        pd_rotmat_i = rotation_6d_to_matrix(pd_poses_i)
+        loss += F.l1_loss(pd_rotmat_i, gt_rotmat, reduction='mean')
 
     return loss
 
@@ -105,8 +108,8 @@ def train_one_epoch(cfg, model: torch.nn.Module, ema_model: torch.nn.Module, cri
             loss_dec_dict = criterion(outputs_dec, targets, batch['_trans'])
 
            
-            if cfg.misc.aux_loss_weight_normal:
-                loss_layer = compute_aux_loss_normal(per_layer_params, targets)
+            if cfg.misc.aux_loss_weight:
+                loss_layer = compute_aux_loss(per_layer_params, targets)
 
             assert loss_enc_dict is not None and loss_dec_dict is not None, "Loss dict is None"
             # scale the losses
@@ -114,8 +117,8 @@ def train_one_epoch(cfg, model: torch.nn.Module, ema_model: torch.nn.Module, cri
             losses_enc = sum(loss_enc_dict[k] * weight_dict[k] for k in loss_enc_dict.keys() if k in weight_dict)
             losses_dec = sum(loss_dec_dict[k] * weight_dict[k] for k in loss_dec_dict.keys() if k in weight_dict)
             
-            if cfg.misc.aux_loss_weight_normal:
-                total_loss = cfg.trainer.lamda * losses_enc + cfg.misc.aux_loss_weight_normal * loss_layer + losses_dec
+            if cfg.misc.aux_loss_weight:
+                total_loss = cfg.trainer.lamda * losses_enc + cfg.misc.aux_loss_weight * loss_layer + losses_dec
             else:
                 total_loss = cfg.trainer.lamda * losses_enc + losses_dec
 
@@ -171,12 +174,12 @@ def train_one_epoch(cfg, model: torch.nn.Module, ema_model: torch.nn.Module, cri
                 writter.add_scalar(f'train_loss/LR', optimizer.param_groups[0]['lr'], epoch * len(data_loader) + iter)
 
             if math.isfinite(total_loss.item()):
-                if cfg.misc.aux_loss_weight_normal:
+                if cfg.misc.aux_loss_weight:
                     logger.info(
                         f'Epoch: [{epoch}] Iter: [{iter}/{len(data_loader)}] '
-                        f'aux_loss_weight_normal: {cfg.misc.aux_loss_weight_normal:.3f} '
+                        f'aux_loss_weight: {cfg.misc.aux_loss_weight:.3f} '
                         f'Loss: {total_loss:.4f} '
-                        f'layer Losses: {loss_layer * cfg.misc.aux_loss_weight_normal:.4f} '
+                        f'layer Losses: {loss_layer * cfg.misc.aux_loss_weight:.4f} '
                         f'enc Losses: {json.dumps(loss_enc_dict_reduced_scaled, indent=2)} '
                         f'dec Losses: {json.dumps(loss_dec_dict_reduced_scaled, indent=2)} '
                         f'LR: {optimizer.param_groups[0]["lr"]:.2e}'
@@ -274,8 +277,7 @@ def evaluate_moyo(cfg, model: nn.Module, data_loader, device, writter, epoch, em
 def evaluate_hmr2(cfg, model: nn.Module, data_list):
     model.eval()
     # 3. Evaluation.
-    metric_dict = eval_pipeline(model, data_list)
-    return metric_dict
+    eval_pipeline(model, data_list)
 
 
 @torch.no_grad()

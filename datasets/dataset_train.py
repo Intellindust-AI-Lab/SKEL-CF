@@ -35,18 +35,6 @@ class DatasetTrainAllLabels(Dataset):
         self.scale = self.labels['scale'] # (N,) or (N,2)
         self.center = self.labels['center']  # (N,) or (N,2)
 
-        # # load smpl poses 
-        # if 'poses' in self.labels:
-        #     self.smpl_poses = self.labels['poses']
-        # else:
-        #     raise ValueError('Unknown smpl poses key')
-        
-        # # load smpl betas
-        # if 'betas' in self.labels:
-        #     self.smpl_betas = self.labels['betas']
-        # else:
-        #     raise ValueError('Unknown smpl betas key')
-
         # 1. load skel poses 
         if 'skel_poses' in self.labels:
             self.skel_poses = self.labels['skel_poses']
@@ -172,8 +160,6 @@ class DatasetTrainAllLabels(Dataset):
             'img_size': np.array([img_size[0], img_size[1]]), # img_full_size, img_height, img_width
             'skel_poses': self.skel_poses[index],
             'skel_betas': self.skel_betas[index],
-            # 'smpl_poses': self.smpl_poses[index],
-            # 'smpl_betas': self.smpl_betas[index],
             'ds_name': self.ds_name,
             'cam_int' : np.array(self.cam_int[index]).astype(np.float32),
             'img_full_resized' : img_full_resized,

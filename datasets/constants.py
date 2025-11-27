@@ -17,9 +17,9 @@ FLIP_KEYPOINT_PERMUTATION = body_permutation + [25 + i for i in extra_permutatio
 
 SMPL_TO_OPENPOSE = [24, 12, 17, 19, 21, 16, 18, 20, 0, 2, 5, 8, 1, 4,
                     7, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]
-SMPL_to_J19 = 'data_inputs/body_models/train-eval-utils/SMPL_to_J19.pkl'
-JOINT_REGRESSOR_TRAIN_EXTRA = 'data_inputs/body_models/train-eval-utils/J_regressor_extra.npy'
-REGRESSOR_H36M='data_inputs/body_models/train-eval-utils/J_regressor_h36m.npy'
+SMPL_to_J19 = 'data_inputs/body_models/SMPL_to_J19.pkl'
+JOINT_REGRESSOR_TRAIN_EXTRA = 'data_inputs/body_models/J_regressor_extra.npy'
+REGRESSOR_H36M='data_inputs/body_models/J_regressor_h36m.npy'
 
 SMPL_MODEL_DIR='data_inputs/body_models/SMPL'
 VITPOSE_BACKBONE='data_inputs/backbone/vitpose_backbone.pth'

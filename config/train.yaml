@@ -15,7 +15,7 @@ exp_name: ""
 output_dir: ${paths.root_dir}/data_outputs/exp/${exp_name}
 
 misc:
-  aux_loss_weight_normal: 1.0
+  aux_loss_weight: 1.0
 
 logger:
   samples_per_record: 5
@@ -29,7 +29,7 @@ policy:
   bbox_shape: null
   
 trainer:
-  total_epochs: 20
+  total_epochs: 30
   max_lr: 1e-5
   min_lr: 1e-7
   warmup_epochs: 1
@@ -38,7 +38,6 @@ trainer:
   weight_decay: 1e-4
   ema_tau: 8000
   ema_decaybase: 0.9995
-  moyo_name: moyo_hard
   lamda: 1.0
 
 eval_list:

@@ -83,15 +83,12 @@ def main(cfg):
     data_list = []
     ds_list = ds_conf.split('_')
     for ds_name in ds_list:
-        logger.info(f'Will test on {ds_name}')
         data = get_data(ds_name, cfg)
         data_list.append(data)
 
     # 3. evalaute moyo 
-    moyo_name = cfg.trainer.moyo_name
-    moyo_name = moyo_name + '.npz' 
-    moyo_name = Path(moyo_name)
-    npz_file = Path(cfg.paths.data_inputs) / 'skel-evaluation-labels' / moyo_name 
+ 
+    npz_file = Path(cfg.paths.data_inputs) / 'skel-evaluation-labels' / 'moyo_hard.npz'
     moyo_dataset = EvalMoyoDataset(cfg, npz_fn=npz_file, ignore_img=False)
     moyo_data_loader = DataLoader(moyo_dataset, cfg.trainer.test_batch_size, drop_last=False, num_workers=cfg.general.num_workers)
 
@@ -104,6 +101,7 @@ def main(cfg):
 
     # only warmup and constant after 
     warmup_steps = cfg.trainer.warmup_epochs * len(data_loader_train)
+
     def lr_lambda(step):
         if step < warmup_steps:
             return (step + 1) / warmup_steps
@@ -127,18 +125,18 @@ def main(cfg):
 
         )
         
-     
+        # COCO
         evaluate_hmr2(
             cfg=cfg, model=model_without_ddp, data_list=data_list
         )
-        # evaluate moyo_hard
+        # MOYO-HARD
         mpjpe, pampjpe, pve, _= evaluate_moyo(cfg, model_without_ddp, moyo_data_loader, device, writter, epoch, ema=False)
         
-        # evaluate ema Model
+        # COCO
         evaluate_hmr2(
             cfg=cfg, model=ema_model.model, data_list=data_list
         )
-        # evaluate moyo_hard
+        # MOYO-HARD
         ema_mpjpe, ema_pampjpe, ema_pve, _ =  evaluate_moyo(cfg, ema_model.model, moyo_data_loader, device, writter_ema, epoch, ema=True)
 
         
