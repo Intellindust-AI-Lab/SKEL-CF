@@ -26,9 +26,13 @@ policy:
   img_std: [0.229, 0.224, 0.225]
   bbox_shape: null
 
-
 misc:
-  distill_type: false
+  num_keep: 5
+  pattern: "*_concat.jpg"
+  video_path: null
+  to_video: null
+  image_folder: null
+  output_folder: null
 
   
 trainer:
