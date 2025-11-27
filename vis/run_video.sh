@@ -1,11 +1,7 @@
-# b1
-CUDA_VISIBLE_DEVICES=9 PYTHONPATH=. python vis_cam/run_video.py \
-                misc.video_path=/data1032/ld_data/skelvit/data_inputs/videos-demo/badminton01.mp4 \
-                misc.to_video=/data1032/ld_data/skelvit/data_outputs/videos-demo/badminton01-rendered.mp4 \
-                misc.num_keep=2 \
-                misc.pattern="*_concat.jpg" \
-                trainer.ckpt_path=/data1032/ld_data/skelvit/data_inputs/1110-aux0.1.pth \
-                hub.skel_head.transformer_decoder.context_dim=1280 
+CUDA_VISIBLE_DEVICES=7 PYTHONPATH=. python vis/run_video.py \
+                misc.video_path='' \
+                misc.to_video='' \
+                trainer.ckpt_path='' \
 
 
 

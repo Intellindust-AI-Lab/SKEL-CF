@@ -9,8 +9,6 @@ import cv2
 
 from vis.color import ColorPalette
 
-
-
 os.environ['PYOPENGL_PLATFORM'] = 'egl'
 
 class Renderer(object):
@@ -26,16 +24,14 @@ class Renderer(object):
 
 
     def render_front_view(self, verts, color_name, faces, bg_img_rgb=None, bg_color=(1., 1., 1., 1.)):
-        # Create a scene for each image and render all meshes
+       
         scene = pyrender.Scene(bg_color=bg_color, ambient_light=np.ones(3) * 0)
-        # Create camera. Camera will always be at [0,0,0]
         camera = pyrender.camera.IntrinsicsCamera(fx=self.focal_length, fy=self.focal_length,
                                                   cx=self.camera_center[0], cy=self.camera_center[1])
         scene.add(camera, pose=np.eye(4))
 
         # Create light source
         light = pyrender.DirectionalLight(color=[1.0, 1.0, 1.0], intensity=3.0)
-        # for DirectionalLight, only rotation matters
         light_pose = trimesh.transformations.rotation_matrix(np.radians(-45), [1, 0, 0])
         scene.add(light, pose=light_pose)
         light_pose = trimesh.transformations.rotation_matrix(np.radians(45), [0, 1, 0])
@@ -43,7 +39,6 @@ class Renderer(object):
 
         # Need to flip x-axis
         rot = trimesh.transformations.rotation_matrix(np.radians(180), [1, 0, 0])
-        # multiple person
         num_people = len(verts)
         # for every person in the scene
         for n in range(num_people):
@@ -83,62 +78,17 @@ class Renderer(object):
             output_img = np.clip(output_img, 0, 255).astype(np.uint8)
             return output_img
 
-    def render_side_view(self, verts, color_name, faces, bg_img_rgb=None, bg_color=(1., 1., 1., 1.), mesh_alpha: float = 0.6, enable_shadows: bool = True):
-        mesh_base_color = ColorPalette.presets_float[color_name]
-        material = pyrender.MetallicRoughnessMaterial(
-            metallicFactor=0.0,
-            alphaMode='BLEND' if mesh_alpha < 1.0 else 'OPAQUE',
-            baseColorFactor=(*mesh_base_color, float(np.clip(mesh_alpha, 0.0, 1.0))))
+    def render_side_view(self, verts, color_name, faces):
+        centroid = verts.mean(axis=(0, 1))   # (3,)
+        centroid[:2] = 0
         
-        camera = pyrender.camera.IntrinsicsCamera(fx=self.focal_length, fy=self.focal_length,
-                                                cx=self.camera_center[0], cy=self.camera_center[1])
+        aroundy = cv2.Rodrigues(np.array([0, np.radians(90.), 0]))[0][np.newaxis, ...]  # (1,3,3)
+        pred_vert_arr_side = np.matmul((verts - centroid), aroundy) + centroid
         
-        # bg_color
-        if len(bg_color) == 3:
-            bg_color = (*bg_color, 0.0)
+        pred_vert_arr_side[:,:,2] += 1
+        side_view = self.render_front_view(pred_vert_arr_side, color_name, faces)
+        return side_view
         
-        scene = pyrender.Scene(bg_color=bg_color, ambient_light=np.array([0.3, 0.3, 0.3]))
-        scene.add(camera, pose=np.eye(4))
-
-        # Lights
-        light = pyrender.DirectionalLight(color=[1.0, 1.0, 1.0], intensity=3.0)
-        scene.add(light, pose=trimesh.transformations.rotation_matrix(np.radians(-45), [1, 0, 0]))
-        scene.add(light, pose=trimesh.transformations.rotation_matrix(np.radians(45), [0, 1, 0]))
-
-        if isinstance(verts, np.ndarray) and verts.ndim == 2:
-            people_verts = [verts]
-        else:
-            people_verts = list(verts)
-        
-        for n, vtx in enumerate(people_verts):
-            mesh = trimesh.Trimesh(vtx, faces, process=False)
-            
-            # 应用旋转：先绕Y轴90度（侧视），再绕X轴180度（翻转）
-            rot_y = trimesh.transformations.rotation_matrix(np.radians(90), [0, 1, 0])
-            mesh.apply_transform(rot_y)
-            rot_x = trimesh.transformations.rotation_matrix(np.radians(180), [1, 0, 0])
-            mesh.apply_transform(rot_x)
-            
-            # 向+Z方向平移，确保在相机视野内
-            trans = trimesh.transformations.translation_matrix([0.0, 0.0, 1.2])
-            mesh.apply_transform(trans)
-            
-            mesh_py = pyrender.Mesh.from_trimesh(mesh, material=material)
-            scene.add(mesh_py, f'mesh_side_{n}')
-        
-        color_rgba, rend_depth = self.renderer.render(scene, flags=pyrender.RenderFlags.RGBA)
-        
-        color_rgb = color_rgba[:, :, :3]
-        color_bgr = cv2.cvtColor(color_rgb, cv2.COLOR_RGB2BGR)
-        
-        if bg_img_rgb is None:
-            return color_bgr
-
-        alpha = (color_rgba[:, :, 3:4].astype(np.float32)) / 255.0
-        fg = color_bgr.astype(np.float32)
-        bg = bg_img_rgb.astype(np.float32)
-        comp = fg * alpha + bg * (1.0 - alpha)
-        return comp.astype(np.uint8)
 
 
     def render_top_view(self, verts, color_name, faces):

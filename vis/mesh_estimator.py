@@ -1,15 +1,12 @@
 from typing import Dict
 import cv2
 import os
-import json
 import torch
 from tqdm import tqdm
-import trimesh
 import numpy as np
 from glob import glob
 from torchvision.transforms import Normalize
 from detectron2.config import LazyConfig
-from body_models.skel_utils.transforms import params_rep2q
 from datasets.constants import DETECTRON_CFG
 from models.cam_model.fl_net import FLNet
 from util.constants import CAM_MODEL_CKPT, DETECTRON_CKPT, IMAGE_MEAN, IMAGE_STD
@@ -18,8 +15,7 @@ from vis.renderer_vis import Renderer
 from util.data import recursive_to
 from body_models.skel_wrapper import SKELWrapper
 from util.utils_detectron2 import DefaultPredictor_Lazy
-from vis.skelvit_render import SKELViTRender
-from vis.color import ColorPalette
+from vis.skelcf_render import SKELCFRender
 
 
 def fix_prefix_state_dict(st: Dict):
@@ -29,8 +25,6 @@ def fix_prefix_state_dict(st: Dict):
             new_k = k.replace('model.', '', 1)
             new_st[new_k] = v
     return new_st
-
-
 
 
 def resize_image(img, target_size):
@@ -77,7 +71,7 @@ class HumanMeshEstimator:
         return model
 
     def init_model(self):
-        model = SKELViTRender(self.cfg)
+        model = SKELCFRender(self.cfg)
         checkpoint = torch.load(self.cfg.trainer.ckpt_path, map_location='cpu')['ema_model']
         st = fix_prefix_state_dict(checkpoint)
         model.load_state_dict(st, strict=True)
@@ -189,17 +183,6 @@ class HumanMeshEstimator:
             with torch.no_grad():
                 _, dec_params, per_layer_params = self.model(batch)
 
-            # for i in range(len(per_layer_params)):     
-                # if i < 5: 
-                #     continue 
-            
-            # poses = per_layer_params[i][f'pd_poses_{i}']
-            # poses = params_rep2q(poses.reshape(-1, 24, 6)).reshape(-1, 46)
-            # skel_params = {
-            #     'poses': poses,
-            #     'betas': per_layer_params[i][f'pd_betas_{i}']
-            # }
-            # out_cam = per_layer_params[i][f'pd_cam_{i}']
             skel_params = dec_params['pd_skel_params']
             out_cam = dec_params[f'pd_cam_t']
             focal_length_ = batch['cam_int'][:, 0, 0]
@@ -211,16 +194,7 @@ class HumanMeshEstimator:
             pred_skin_verts_array = (pred_skin_verts + output_cam_trans.unsqueeze(1)).detach().cpu().numpy()
             pred_skel_verts_array = (pred_skel_verts + output_cam_trans.unsqueeze(1)).detach().cpu().numpy()
             
-            # obj_fname = os.path.join(output_img_folder, f'{os.path.basename(fname)}_skin.obj')
-            # skin_mesh = trimesh.Trimesh(vertices=pred_skin_verts[0].cpu(), faces=self.skel_model.skin_f.cpu().numpy(), process=False)
-            # skin_mesh.export(obj_fname)
             
-     
-            # skel_obj_fname = os.path.join(output_img_folder, f'{os.path.basename(fname)}_skel.obj')
-            # skel_mesh = trimesh.Trimesh(vertices=pred_skel_verts[0].cpu(), faces=self.skel_model.skel_f.cpu().numpy(), process=False)
-            # skel_mesh.export(skel_obj_fname)
-            
-
             # 5. Render overlay
             renderer = Renderer(focal_length=focal_length[0], 
                 img_w=img_w, img_h=img_h, same_mesh_color=True)
@@ -259,5 +233,5 @@ class HumanMeshEstimator:
             os.makedirs(out_folder)
         image_extensions = ['*.jpg', '*.jpeg', '*.png', '*.gif', '*.bmp', '*.tiff', '*.webp']
         images_list = [image for ext in image_extensions for image in glob(os.path.join(image_folder, ext))]
-        for ind, img_path in tqdm(enumerate(images_list), desc="Processing images", total=len(images_list)):
+        for ind, img_path in tqdm(enumerate(images_list), desc="Rendering images", total=len(images_list)):
             self.process_image(img_path, out_folder)
