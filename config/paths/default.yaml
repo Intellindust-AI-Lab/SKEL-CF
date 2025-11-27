@@ -1,0 +1,8 @@
+# path to root directory
+# this requires PROJECT_ROOT environment variable to exist
+
+root_dir: /public_hw/home/cit_yuzeng/skelvit
+
+data_inputs: ${paths.root_dir}/data_inputs/
+data_outputs: ${paths.root_dir}/data_outputs/
+work_dir: ${hydra:runtime.cwd}

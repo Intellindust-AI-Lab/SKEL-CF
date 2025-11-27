@@ -1,0 +1,18 @@
+{
+
+    "python.analysis.exclude": [
+        "**/__pycache__",
+        "**/.git",
+        "**/.venv",
+        "**/data_inputs",
+        "**/data_outputs",
+    ],
+    "cursorpyright.analysis.exclude": [
+        "**/__pycache__",
+        "**/.git",
+        "**/.venv",
+        "**/data_inputs",
+        "**/data_outputs"
+    ]
+}
+  
