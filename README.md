@@ -90,6 +90,13 @@
 
 
 ## 🚀 Demo & Quick Start
+Before you run the demo, you should install detectron2 for detection and human body model for human mesh and skeleton recocvery.
+
+## Detectron2 Installation
+To test images “in the wild,” you need to install the appropriate version of [Detectron2](https://detectron2.readthedocs.io/en/latest/tutorials/install.html) corresponding to your specific GPU, CUDA, and PyTorch configuration.
+
+## SKEL model Installation
+[SKEL](https://skel.is.tue.mpg.de/)
 
 Quick start with images:
 
@@ -104,7 +111,6 @@ Quick start with videos:
 
 bash vis/run_video.sh
 ```
-
 
 ## 🧱 Reproducibility
 
@@ -126,6 +132,7 @@ For reproducing the results in the paper, please refer to [`docs/EVAL.md`](./doc
 </a>
 
 > 💡 **Tip**: Click the buttons above to watch videos, or visit our [project page](https://pokerman8.github.io/SKEL-CF/) for more visual results.
+
 
 ## 📝 Citation
 If you use `SKEL-CF` or its methods in your work, please cite the following BibTeX entries:
