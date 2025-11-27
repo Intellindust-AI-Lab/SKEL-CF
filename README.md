@@ -72,6 +72,7 @@
 
 ##  🗓️ Updates
 - [x] **\[2025.11.26\]** Release SKEL-CF.
+- [x] **\[2025.11.27\]** Upload the model checkpoints & labels to hugging face
 
 ## 🧭 Table of Content
 * [1. ⚒️ Setup](#%EF%B8%8F-setup)
@@ -90,14 +91,6 @@
 
 
 ## 🚀 Demo & Quick Start
-Before you run the demo, you should install detectron2 for detection and human body model for human mesh and skeleton recocvery.
-
-## Detectron2 Installation
-To test images “in the wild,” you need to install the appropriate version of [Detectron2](https://detectron2.readthedocs.io/en/latest/tutorials/install.html) corresponding to your specific GPU, CUDA, and PyTorch configuration.
-
-## SKEL model Installation
-[SKEL](https://skel.is.tue.mpg.de/)
-
 Quick start with images:
 
 ```shell
