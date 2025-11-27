@@ -34,7 +34,7 @@
 
 <div align="center">
   Da Li<sup>1,2,*</sup>,&nbsp;&nbsp;
-  <a href="https://pokerman8.github.io/">Ji-Ping Jin</a><sup>1,3,*</sup>,&nbsp;&nbsp;
+  <a href="https://pokerman8.github.io/">Jiping Jin</a><sup>1,3,*</sup>,&nbsp;&nbsp;
   <a href="https://xuanlong-yu.github.io/">Xuanlong Yu</a><sup>1</sup>,&nbsp;&nbsp;
   Wei Liu<sup>5</sup>,&nbsp;&nbsp;
   <a href="https://vinthony.github.io/academic/">Xiaodong Cun</a><sup>4</sup>,&nbsp;&nbsp;<br/>
