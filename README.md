@@ -72,7 +72,7 @@
 
 ##  🗓️ Updates
 - [x] **\[2025.11.26\]** Release SKEL-CF.
-- [x] **\[2025.11.27\]** Release checkpoints and labels on [Hugging Face](https://huggingface.co/Intellindust/SKEL_CF_vitpose_H)).
+- [x] **\[2025.11.27\]** Release checkpoints and labels on [Hugging Face](https://huggingface.co/Intellindust/SKEL_CF_vitpose_H).
 
 ## 🧭 Table of Content
 * [1. ⚒️ Setup](#%EF%B8%8F-setup)
