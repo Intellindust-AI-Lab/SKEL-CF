@@ -14,6 +14,37 @@ pip install --no-deps albucore==0.0.24
 ## Detectron2 Installation
 To test images “in the wild,” you need to install the appropriate version of [Detectron2](https://detectron2.readthedocs.io/en/latest/tutorials/install.html) corresponding to your specific GPU, CUDA, and PyTorch configuration.
 
+## body_models Installation
+Due to copyright considerations, we cannot directly provide files/folders in [body_models](https://github.com/Intellindust-AI-Lab/SKEL-CF/tree/main/body_models), you should get skel folder comes from [SKEL](https://github.com/MarilynKeller/SKEL/tree/master/skel) and skel_utils folder and the remaining related code from [HSMR](https://github.com/IsshikiHugh/HSMR/tree/main/lib/body_models) and put these folders/files into the corresponding locations as shown below.
+
+    body_models/
+    ├── skel/
+    │   ├── alignment/
+    │   │   ├── align_config_joint.py
+    │   │   ├── align_config.py
+    │   │   ├── aligner.py
+    │   │   ├── losses.py
+    │   │   └── utils.py
+    │   └── fit_osim/
+    │       ├── mappings/
+    │       ├── Fitting_SKEL_to_osim.md
+    │       ├── osim_aug.py
+    │       └── osim_fitter.py
+    ├── __init__.py
+    ├── config.py
+    ├── joints_def.py
+    ├── kin_skel.py
+    ├── osim_rot.py
+    ├── skel_model.py
+    ├── utils.py
+    ├── skel_utils/
+    │   ├── augmentation.py
+    │   ├── definition.py
+    │   ├── limits.py
+    │   └── transforms.py
+    └── skel_wrapper.py
+
+Thanks again for your attention and understanding!
 # Data-preparation
 
 Choose your setup path:
