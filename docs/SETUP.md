@@ -91,7 +91,7 @@ Download **SKEL-CF.pth** from [SKEL-CF](https://onedrive.live.com/?redeem=aHR0cH
 ## ⚙️ Advanced setup
 
 ### Pretrained Camera Model Checkpoint & ViTPose Backbone Checkpoint
-Download **backbone** from OneDrive and place it under the data_inputs/ directory. The file structure will be as follows:
+You should download the pretrained checkpoint " cam_model_cleaned.ckpt" from the [CameraHMR](https://camerahmr.is.tue.mpg.de), it's called "HumanFov Model" on their website, with a size about 768 MB. Also, you should download vitpose_backbone.pth from [VITPOSE](https://github.com/ViTAE-Transformer/ViTPose) with simple decoder (about 2.35GB), we use vitpose-H as baseline, you can also choose S/B/L model if you don't have enough VRAM, and place them under the data_inputs/backone directory. The file structure will be as follows:
 
     data_inputs/
     └── backbone/
