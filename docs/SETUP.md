@@ -15,7 +15,8 @@ pip install --no-deps albucore==0.0.24
 To test images “in the wild,” you need to install the appropriate version of [Detectron2](https://detectron2.readthedocs.io/en/latest/tutorials/install.html) corresponding to your specific GPU, CUDA, and PyTorch configuration.
 
 ## body_models Installation
-Due to copyright considerations, we cannot directly provide files/folders in [body_models](https://github.com/Intellindust-AI-Lab/SKEL-CF/tree/main/body_models), you should get skel folder comes from [SKEL](https://github.com/MarilynKeller/SKEL/tree/master/skel) and skel_utils folder and the remaining related code from [HSMR](https://github.com/IsshikiHugh/HSMR/tree/main/lib/body_models) and put these folders/files into the corresponding locations as shown below.
+Due to copyright considerations, we cannot directly provide files/folders in [body_models](https://github.com/Intellindust-AI-Lab/SKEL-CF/tree/main/body_models), you should get skel folder comes from [SKEL](https://github.com/MarilynKeller/SKEL/tree/master/skel) and skel_utils folder and the remaining related code from [HSMR](https://github.com/IsshikiHugh/HSMR/tree/main/lib/body_models) and put these folders/files into the corresponding locations as shown below. 
+Some external code and libraries include dependencies on and calls to their original repositories, so you may need to adjust these parts yourself (for example, the issue encountered in [issue#5](https://github.com/Intellindust-AI-Lab/SKEL-CF/issues/5)). If you run into any problems during the installation process, please feel free to raise them in an issue.
 
     body_models/
     ├── skel/
@@ -44,7 +45,6 @@ Due to copyright considerations, we cannot directly provide files/folders in [bo
     │   └── transforms.py
     └── skel_wrapper.py
 
-Thanks again for your attention and understanding!
 # Data-preparation
 
 Choose your setup path:
