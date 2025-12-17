@@ -33,7 +33,7 @@
 ---
 
 <div align="center">
-  <a href="https://dali936.github.io/">Da Li<sup>1,2,*</sup>,&nbsp;&nbsp;
+  <a href="https://dali936.github.io/">Da Li</a><sup>1,2,*</sup>,&nbsp;&nbsp;
   <a href="https://pokerman8.github.io/">Jiping Jin</a><sup>1,3,*</sup>,&nbsp;&nbsp;
   <a href="https://xuanlong-yu.github.io/">Xuanlong Yu</a><sup>1</sup>,&nbsp;&nbsp;
   Wei Liu<sup>5</sup>,&nbsp;&nbsp;
