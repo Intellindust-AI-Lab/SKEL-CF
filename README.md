@@ -1,5 +1,5 @@
 <h2 align="center">
-  SKEL-CF: Coarse-to-Fine Biomechanical Skeleton and Surface Mesh Recovery
+  [ECCV 2026] SKEL-CF: Coarse-to-Fine Biomechanical Skeleton and Surface Mesh Recovery
 </h2>
 
 <p align="center">
