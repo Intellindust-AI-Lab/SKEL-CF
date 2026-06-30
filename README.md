@@ -6,7 +6,7 @@
     <a href="https://github.com/Intellindust-AI-Lab/SKEL-CF/blob/master/LICENSE">
         <img alt="license" src="https://img.shields.io/badge/LICENSE-Apache%202.0-blue">
     </a>
-    <a href="https://arxiv.org/abs/2511.20157v5">
+    <a href="https://arxiv.org/abs/2511.20157v6">
         <img alt="arXiv" src="https://img.shields.io/badge/arXiv-2511.20157-red">
     </a>
    <a href="https://pokerman8.github.io/SKEL-CF/">
@@ -131,11 +131,11 @@ For reproducing the results in the paper, please refer to [`docs/EVAL.md`](./doc
 If you use `SKEL-CF` or its methods in your work, please cite the following BibTeX entries:
 
 ```latex
-@article{li2025skelcf,
+@inproceedings{li2025skelcf,
   title={SKEL-CF: Coarse-to-Fine Biomechanical Skeleton and Surface Mesh Recovery},
   author={Li, Da and Jin, Jiping and Yu, Xuanlong and Cun, Xiaodong and Chen, Kai and Fan, Rui and Kong, Jiangang and Shen, Xi},
-  journal={arXiv},
-  year={2025}
+  booktitle={European Conference on Computer Vision},
+  year={2026}
 }
 ```
 ## 📜 Acknowledgement
