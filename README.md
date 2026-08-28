@@ -144,4 +144,10 @@ Parts of the code are adapted from the following repos: [SKEL](https://github.co
 
 ## 🌟 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Intellindust-AI-Lab/SKEL-CF&type=date&legend=top-left)](https://www.star-history.com/#Intellindust-AI-Lab/SKEL-CF&type=date&legend=top-left)
+<a href="https://star-history.dera.page/#Intellindust-AI-Lab/SKEL-CF">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=Intellindust-AI-Lab/SKEL-CF&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=Intellindust-AI-Lab/SKEL-CF" />
+   <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=Intellindust-AI-Lab/SKEL-CF" />
+ </picture>
+</a>
